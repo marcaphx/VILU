@@ -10,10 +10,13 @@
 
 
 <body>
-    <audio id="bg-audio"  style="width:340px;max-width:90vw;display:none;">
-        <source src="Lazy Afternoons - Yoko Shimomura.mp3" type="audio/mpeg">
-        Your browser does not support the audio element.
-    </audio>
+    <div id="start-overlay"
+        style="position:fixed;z-index:9999;top:0;left:0;width:100vw;height:100vh;background:rgba(0,0,0,0.82);display:flex;align-items:center;justify-content:center;flex-direction:column;">
+        <button id="start-btn"
+            style="padding:1.2em 3em;font-size:1.3em;border-radius:2em;background:#ffb6d5;color:#fff;border:none;box-shadow:0 2px 24px #ffb6d5;cursor:pointer;transition:background 0.2s;">Start
+            & Play Audio</button>
+        <p style="color:#fff;margin-top:1.2em;font-size:1.1em;opacity:0.8;">Click to begin and enable music</p>
+    </div>
     <div id="typing-text" class="typing" style="margin-top: 1.2rem"></div>
     <div id="typing-text-2" class="typing" style="margin-top: 1.2rem;"></div>
     <div id="typing-text-3" class="typing" style="margin-top: 1.2rem;"></div>
@@ -37,6 +40,11 @@
             <p>-Marc <img src="image.png" alt="" style="height:200px; width:200px; object-fit:cover;"></p>
         </div>
     </div>
+    <audio id="bg-audio" style="width:340px;max-width:90vw;display:none;">
+        <source src="Lazy Afternoons - Yoko Shimomura.mp3" type="audio/mpeg">
+        Your browser does not support the audio element.
+    </audio>
+
 
     <script>
         const texts = [
@@ -52,6 +60,7 @@
             document.getElementById('typing-text-4')
         ];
         let current = 0;
+        let animationStarted = false;
         function typeWriterN(idx) {
             // Start audio as soon as the first typing animation begins
             if (idx === 0) {
@@ -202,11 +211,21 @@
             }
             typeChar();
         }
-        // Start with empty text and trigger animation
-        typingDivs.forEach(div => { div.textContent = ''; div.style.display = 'none'; });
-        typeWriterN(0);
+        function startExperience() {
+            if (animationStarted) return;
+            animationStarted = true;
+            document.getElementById('start-overlay').style.display = 'none';
+            const audio = document.getElementById('bg-audio');
+            if (audio) {
+                audio.style.display = 'block';
+                audio.play().catch(() => { });
+            }
+            // Start with empty text and trigger animation
+            typingDivs.forEach(div => { div.textContent = ''; div.style.display = 'none'; });
+            typeWriterN(0);
+        }
+        document.getElementById('start-btn').onclick = startExperience;
     </script>
 </body>
-
 
 </html>
